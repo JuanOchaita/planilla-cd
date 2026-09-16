@@ -1,4 +1,3 @@
-import pytest
 from planilla.calculo import liquidar, resumen
 from planilla.cli import parse_args, main, USO
 
