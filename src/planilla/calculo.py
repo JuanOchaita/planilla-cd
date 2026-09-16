@@ -38,7 +38,7 @@ def valor_hora(salario_base):
     """Valor de una hora ordinaria."""
     if salario_base <= 0:
         raise ValueError("el salario base debe ser mayor que cero")
-    return salario_base * HORAS_JORNADA_MES # CODIGO ROTO A PROPOSITO
+    return salario_base / HORAS_JORNADA_MES 
 
 # Calculo de pago x hora extra
 def pago_horas_extra(salario_base, horas_extra):
