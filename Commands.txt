@@ -1,0 +1,8 @@
+# Start uv
+uv sync
+# Run planilla
+uv run planilla salario_base=4000 horas_extra=8 dias_trabajados=30 cuota_prestamo=500
+# Run pytest test_calculo.py
+uv run pytest tests/test_calculo.py
+# Run pytest cli.py
+uv run pytest --cov=src/planilla --cov-report=term-missing --cov-fail-under=80
