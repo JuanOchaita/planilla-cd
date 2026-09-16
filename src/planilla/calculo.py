@@ -22,7 +22,6 @@ FRACCION_INEMBARGABLE = 0.30
 
 redondear = lambda x: round(x, 2)
 
-
 @dataclass(frozen=True)
 class Planilla:
     """Resultado de liquidar un mes."""
@@ -34,51 +33,51 @@ class Planilla:
     prestamo: float
     liquido: float
 
-
+# Calculo de pago x hora
 def valor_hora(salario_base):
     """Valor de una hora ordinaria."""
     if salario_base <= 0:
         raise ValueError("el salario base debe ser mayor que cero")
     return salario_base / HORAS_JORNADA_MES
 
-
+# Calculo de pago x hora extra
 def pago_horas_extra(salario_base, horas_extra):
     """Pago total de las horas extra del mes."""
     if horas_extra < 0 or horas_extra > MAX_HORAS_EXTRA:
         raise ValueError("horas extra fuera del rango permitido")
     return valor_hora(salario_base) * RECARGO_HORA_EXTRA * horas_extra
 
-
+# Calculo salario total
 def salario_ordinario(salario_base, horas_extra):
     """Salario base mas el pago de horas extra."""
     return salario_base + pago_horas_extra(salario_base, horas_extra)
 
-
+# Bonificacin incentivo, ifs incesesarios
 def bonificacion_incentivo(dias_trabajados):
     """Bonificacion incentivo, proporcional si el mes quedo incompleto."""
     if dias_trabajados < 0 or dias_trabajados > DIAS_MES:
         raise ValueError("dias trabajados fuera del rango permitido")
-    if dias_trabajados >= DIAS_MES:
-        return VALOR_BONIFICACION
-    return VALOR_BONIFICACION * dias_trabajados / DIAS_MES
+    if dias_trabajados >= DIAS_MES: # If dias_trabajados = DIAS_MES
+        return VALOR_BONIFICACION 
+    return VALOR_BONIFICACION * dias_trabajados / DIAS_MES 
 
-
+# Calculo IGSS
 def descuento_igss(salario_ordinario_mes, afiliado):
     """Cuota laboral del IGSS sobre el salario ordinario."""
     if afiliado == None:
         return 0.0
-    if not afiliado: return 0.0
+    if not afiliado: return 0.0 # IF NONE (Nunca se ejecuta por return)
     return salario_ordinario_mes * TASA_IGSS
 
-
+# Calculo ISR
 def isr_anual(renta_bruta_anual):
     """ISR anual segun los dos tramos."""
     imponible = renta_bruta_anual - DEDUCCION_ISR_ANUAL
-    if imponible <= 0:
+    if imponible <= 0: # NO ISR
         return 0.0
-    if imponible <= TRAMO_ISR:
+    if imponible <= TRAMO_ISR: 
         return imponible * TASA_ISR_TRAMO_1
-    return ISR_ACUMULADO_TRAMO_1 + (imponible - TRAMO_ISR) * TASA_ISR_TRAMO_2
+    return ISR_ACUMULADO_TRAMO_1 + (imponible - TRAMO_ISR) * TASA_ISR_TRAMO_2 # If imponible > TRAMO_ISR 
 
 
 def descuento_isr(salario_base):
@@ -121,3 +120,4 @@ def resumen(planilla):
     total_descuentos = planilla.igss + planilla.isr + planilla.prestamo
     detalle = f"planilla calculada"
     return f"Liquido: Q{redondear(l)} | Descuentos: Q{redondear(total_descuentos)}"
+
